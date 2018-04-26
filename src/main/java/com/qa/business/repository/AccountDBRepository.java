@@ -36,12 +36,22 @@ public class AccountDBRepository implements IAccountRepository {
 	}
 
 	@Override
+	@Transactional(REQUIRED)
 	public String updateAccount(Long id, String jsonAccount) {
-		// TODO Auto-generated method stub
-		return null;
+		//LOGGER.info("AccountDBRepository updateAccount");
+		Account updatedAccount = jsonUtil.getObjectForJSON(jsonAccount, Account.class);
+		Account oldAccount = findAccount(id);
+		
+		if (oldAccount != null) {
+			manager.merge(updatedAccount);
+			return "{\"message\": \"Account has been successfully updated!\"}";
+		} else {
+			return "{\"message\": \"Account does not exist!\"}";
+		}
 	}
 
 	@Override
+	@Transactional(REQUIRED)
 	public String deleteAccount(Long id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -54,5 +64,8 @@ public class AccountDBRepository implements IAccountRepository {
 	public void setJSONUtil(JSONUtil jsonUtil) {
 		this.jsonUtil = jsonUtil;
 	}
-
+	
+	private Account findAccount(Long id) {
+		return manager.find(Account.class, id);
+	}
 }
