@@ -53,8 +53,15 @@ public class AccountDBRepository implements IAccountRepository {
 	@Override
 	@Transactional(REQUIRED)
 	public String deleteAccount(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		//LOGGER.info("AccountDBRepository deleteAccount");
+		Account account = findAccount(id);
+		
+		if (account != null) {
+			manager.remove(account);
+			return "{\"message\": \"Account has been successfully deleted!\"}";
+		} else {
+			return "{\"message\": \"Account does not exist!\"}";
+		}
 	}
 
 	public void setEntityManager(EntityManager manager) {

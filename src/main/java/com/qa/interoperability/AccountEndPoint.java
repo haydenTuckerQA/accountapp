@@ -2,6 +2,7 @@ package com.qa.interoperability;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -30,5 +31,12 @@ public class AccountEndPoint {
 	@Consumes({ "application/json" })
 	public String updateAccount(@PathParam("id") Long id, String jsonAccount) {
 		return service.updateAccount(id, jsonAccount);
+	}
+	
+	@DELETE
+	@Path("/delete/{id}")
+	@Produces({ "application/json" })
+	public String updateAccount(@PathParam("id") Long id) {
+		return service.deleteAccount(id);
 	}
 }
