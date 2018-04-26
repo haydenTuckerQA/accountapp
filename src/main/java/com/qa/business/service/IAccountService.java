@@ -1,5 +1,6 @@
 package com.qa.business.service;
 
 public interface IAccountService {
-	public String createAccount(String jsonAccount);
+	String createAccount(String jsonAccount);
+	String updateAccount(Long id, String jsonAccount);
 }
