@@ -63,6 +63,18 @@ public class AccountDBRepository implements IAccountRepository {
 			return "{\"message\": \"Account does not exist!\"}";
 		}
 	}
+	
+	@Override
+	public String getAccount(Long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public String getAllAccounts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	public void setEntityManager(EntityManager manager) {
 		this.manager = manager;
