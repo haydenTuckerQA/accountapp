@@ -20,6 +20,7 @@ import com.qa.util.JSONUtil;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountDBRepositoryTest {
+	
 
 	@InjectMocks
 	private AccountDBRepository repo;
