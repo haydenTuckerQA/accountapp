@@ -26,72 +26,55 @@ public class AccountDBRepository implements IAccountRepository {
 	@PersistenceContext(unitName = "primary")
 	private EntityManager manager;
 	
-	@Inject
-	private JSONUtil jsonUtil;
-	
 	@Override
 	@Transactional(REQUIRED)
-	public String createAccount(String jsonAccount) {
+	public Account createAccount(Account account) {
 		//LOGGER.info("AccountDBRepository createAccount");
-		Account account = jsonUtil.getObjectForJSON(jsonAccount, Account.class);
 		this.manager.persist(account);
-		return "{\"message\": \"Account has been successfully created!\"}";
+		return account;
 	}
 
 	@Override
 	@Transactional(REQUIRED)
-	public String updateAccount(Long id, String jsonAccount) {
+	public Account updateAccount(Long id, Account updatedAccount) {
 		//LOGGER.info("AccountDBRepository updateAccount");
-		Account updatedAccount = jsonUtil.getObjectForJSON(jsonAccount, Account.class);
 		Account oldAccount = findAccount(id);
 		
 		if (oldAccount != null) {
 			manager.merge(updatedAccount);
-			return "{\"message\": \"Account has been successfully updated!\"}";
+			return updatedAccount;
 		} else {
-			return "{\"message\": \"Account does not exist!\"}";
+			return oldAccount;
 		}
 	}
 
 	@Override
 	@Transactional(REQUIRED)
-	public String deleteAccount(Long id) {
+	public Account deleteAccount(Long id) {
 		//LOGGER.info("AccountDBRepository deleteAccount");
 		Account account = findAccount(id);
 		
 		if (account != null) {
 			manager.remove(account);
-			return "{\"message\": \"Account has been successfully deleted!\"}";
-		} else {
-			return "{\"message\": \"Account does not exist!\"}";
 		}
+		return account;
 	}
 	
 	@Override
-	public String getAllAccounts() {
+	public List<Account> getAllAccounts() {
 		//LOGGER.info("AccountDBRepository getAllAccounts");
 		TypedQuery<Account> query = manager.createQuery("SELECT a FROM Account a", Account.class);
-		List<Account> accounts = query.getResultList();
-		return jsonUtil.getJSONForObject(accounts);
+		return query.getResultList();
 	}
 	
 	@Override
-	public String getAccount(Long id) {
+	public Account getAccount(Long id) {
 		//LOGGER.info("AccountDBRepository getAccount");
-		Account account = findAccount(id);
-		if (account != null) {
-			return jsonUtil.getJSONForObject(account);
-		} else {
-			return "{\"message\": \"Account does not exist!\"}";
-		}
+		return findAccount(id);
 	}
 	
 	public void setEntityManager(EntityManager manager) {
 		this.manager = manager;
-	}
-
-	public void setJSONUtil(JSONUtil jsonUtil) {
-		this.jsonUtil = jsonUtil;
 	}
 	
 	private Account findAccount(Long id) {
