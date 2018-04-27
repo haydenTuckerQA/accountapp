@@ -3,10 +3,13 @@ package com.qa.business.repository;
 import static javax.transaction.Transactional.TxType.REQUIRED;
 import static javax.transaction.Transactional.TxType.SUPPORTS;
 
+import java.util.List;
+
 import javax.enterprise.inject.Default;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
@@ -20,7 +23,7 @@ public class AccountDBRepository implements IAccountRepository {
 	
 	private static final Logger LOGGER = Logger.getLogger(AccountDBRepository.class);
 	
-	@PersistenceContext(unitName ="primary")
+	@PersistenceContext(unitName = "primary")
 	private EntityManager manager;
 	
 	@Inject
@@ -65,17 +68,24 @@ public class AccountDBRepository implements IAccountRepository {
 	}
 	
 	@Override
-	public String getAccount(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+	public String getAllAccounts() {
+		//LOGGER.info("AccountDBRepository getAllAccounts");
+		TypedQuery<Account> query = manager.createQuery("SELECT a FROM Account a", Account.class);
+		List<Account> accounts = query.getResultList();
+		return jsonUtil.getJSONForObject(accounts);
 	}
 	
 	@Override
-	public String getAllAccounts() {
-		// TODO Auto-generated method stub
-		return null;
+	public String getAccount(Long id) {
+		//LOGGER.info("AccountDBRepository getAccount");
+		Account account = findAccount(id);
+		if (account != null) {
+			return jsonUtil.getJSONForObject(account);
+		} else {
+			return "{\"message\": \"Account does not exist!\"}";
+		}
 	}
-
+	
 	public void setEntityManager(EntityManager manager) {
 		this.manager = manager;
 	}

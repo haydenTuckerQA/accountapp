@@ -1,7 +1,5 @@
 package com.qa.business.repository;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,13 +30,12 @@ public class AccountDBRepositoryTest {
 	@Mock
 	private TypedQuery<Account> query;
 	
-	@Mock
 	Account account = new Account("Hayden", "Tucker", "1234");
 	
 	private JSONUtil jsonUtil;
 	
-	private static final String ACCOUNT_JSON = "{\"firstName\":\"Hayden\",\"secondName\":\"Tucker\",\"accountNumber\":\"1234\"}";
-	private static final String ACCOUNT_LIST_JSON = "{\"firstName\":\"Hayden\",\"secondName\":\"Tucker\",\"accountNumber\":\"1234\"}";
+	private static final String ACCOUNT_JSON = "{\"firstName\":\"Hayden\",\"lastName\":\"Tucker\",\"accountNumber\":\"1234\"}";
+	private static final String ACCOUNT_LIST_JSON = "[{\"firstName\":\"Hayden\",\"lastName\":\"Tucker\",\"accountNumber\":\"1234\"}]";
 	
 	@Before
 	public void initialise() {
@@ -95,16 +92,14 @@ public class AccountDBRepositoryTest {
 	}
 
 	@Test
-	public void testGetAnAccount() {
-		Mockito.when(manager.createQuery(Mockito.anyString(), Mockito.eq(Account.class))).thenReturn(query);
-		
-		List<Account> accounts = new ArrayList<Account>();
-		accounts.add(new Account("Hayden", "Tucker", "1234"));
-		
-		Mockito.when(query.getResultList()).thenReturn(accounts);
-		
-		String expectedValue = ACCOUNT_JSON;
+	public void testGetAccount() {
+		String expectedValue = "{\"message\": \"Account does not exist!\"}";
 		String actualValue = repo.getAccount(1L);
+		Assert.assertEquals(expectedValue, actualValue);
+		
+		Mockito.when(manager.find(Mockito.eq(Account.class), Mockito.anyLong())).thenReturn(account);
+		expectedValue = ACCOUNT_JSON;
+		actualValue = repo.getAccount(1L);
 		Assert.assertEquals(expectedValue, actualValue);
 	}
 }
