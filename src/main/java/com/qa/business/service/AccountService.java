@@ -24,4 +24,14 @@ public class AccountService implements IAccountService {
 		return repo.deleteAccount(id);
 	}
 
+	@Override
+	public String getAllAccounts() {
+		return repo.getAllAccounts();
+	}
+
+	@Override
+	public String getAccount(Long id) {
+		return repo.getAccount(id);
+	}
+
 }
