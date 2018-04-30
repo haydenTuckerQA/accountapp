@@ -36,9 +36,9 @@ public class AccountDBRepository implements IAccountRepository {
 
 	@Override
 	@Transactional(REQUIRED)
-	public Account updateAccount(Long id, Account updatedAccount) {
+	public Account updateAccount(String username, Account updatedAccount) {
 		//LOGGER.info("AccountDBRepository updateAccount");
-		Account oldAccount = findAccount(id);
+		Account oldAccount = findAccount(username);
 		
 		if (oldAccount != null) {
 			manager.merge(updatedAccount);
@@ -50,9 +50,9 @@ public class AccountDBRepository implements IAccountRepository {
 
 	@Override
 	@Transactional(REQUIRED)
-	public Account deleteAccount(Long id) {
+	public Account deleteAccount(String username) {
 		//LOGGER.info("AccountDBRepository deleteAccount");
-		Account account = findAccount(id);
+		Account account = findAccount(username);
 		
 		if (account != null) {
 			manager.remove(account);
@@ -68,16 +68,18 @@ public class AccountDBRepository implements IAccountRepository {
 	}
 	
 	@Override
-	public Account getAccount(Long id) {
+	public Account getAccount(String username) {
 		//LOGGER.info("AccountDBRepository getAccount");
-		return findAccount(id);
+		return findAccount(username);
 	}
 	
 	public void setEntityManager(EntityManager manager) {
 		this.manager = manager;
 	}
 	
-	private Account findAccount(Long id) {
-		return manager.find(Account.class, id);
+	private Account findAccount(String username) {
+		return manager.find(Account.class, username);
 	}
+
+	
 }

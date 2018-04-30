@@ -1,0 +1,2 @@
+INSERT INTO ACCOUNT (username, password, firstName, lastName, accountNumber, type) VALUES ('admin', 'password', 'Admin', '', '', 'ADMIN')
+INSERT INTO ACCOUNT (username, password, firstName, lastName, accountNumber, type) VALUES ('username', 'password', 'Hayden', 'Tucker', '12345', 'USER')

@@ -27,18 +27,26 @@ public class AccountEndPoint {
 	}
 	
 	@PUT
-	@Path("/update/{id}")
+	@Path("/update/{username}")
 	@Produces({ "application/json" })
 	@Consumes({ "application/json" })
-	public String updateAccount(@PathParam("id") Long id, String jsonAccount) {
-		return service.updateAccount(id, jsonAccount);
+	public String updateAccount(@PathParam("username") String username, String jsonAccount) {
+		return service.updateAccount(username, jsonAccount);
+	}
+	
+	@PUT
+	@Path("/update/{username}/{oldPassword}")
+	@Produces({ "application/json" })
+	@Consumes({ "application/json" })
+	public String updateAccountPassword(@PathParam("username") String username, @PathParam("oldPassword") String oldPassword, String jsonAccount) {
+		return service.updateAccountPassword(username, oldPassword, jsonAccount);
 	}
 	
 	@DELETE
-	@Path("/delete/{id}")
+	@Path("/delete/{username}")
 	@Produces({ "application/json" })
-	public String deleteAccount(@PathParam("id") Long id) {
-		return service.deleteAccount(id);
+	public String deleteAccount(@PathParam("username") String username) {
+		return service.deleteAccount(username);
 	}
 	
 	@GET
@@ -49,9 +57,17 @@ public class AccountEndPoint {
 	}
 	
 	@GET
-	@Path("/get/{id}")
+	@Path("/get/{username}")
 	@Produces({ "application/json" })
-	public String getAccount(@PathParam("id") Long id) {
-		return service.getAccount(id);
+	public String getAccount(@PathParam("username") String username) {
+		return service.getAccount(username);
+	}
+	
+	@GET
+	@Path("/login/{username}/{password}")
+	@Consumes({ "application/json" })
+	@Produces({ "application/json" })
+	public String login(@PathParam("username") String username, @PathParam("password") String password) {
+		return service.login(username, password);
 	}
 }

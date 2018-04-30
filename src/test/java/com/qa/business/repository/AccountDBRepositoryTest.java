@@ -16,7 +16,6 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.qa.persistence.domain.Account;
-import com.qa.util.JSONUtil;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountDBRepositoryTest {
@@ -33,17 +32,15 @@ public class AccountDBRepositoryTest {
 	
 	private Account account;
 	private List<Account> accounts;
-	private JSONUtil jsonUtil;
 	
-	//private static final String ACCOUNT_JSON = "{\"firstName\":\"Hayden\",\"lastName\":\"Tucker\",\"accountNumber\":\"1234\"}";
-	//private static final String ACCOUNT_LIST_JSON = "[{\"firstName\":\"Hayden\",\"lastName\":\"Tucker\",\"accountNumber\":\"1234\"}]";
+	//private static final String ACCOUNT_JSON = "{\"username\":\"username\",\"password\":\"password\",\"firstName\":\"Hayden\",\"lastName\":\"Tucker\",\"accountNumber\":\"1234\",\"accountType\":\"USER\"}";
+	//private static final String ACCOUNT_LIST_JSON = "["{\"username\":\"username\",\"password\":\"password\",\"firstName\":\"Hayden\",\"lastName\":\"Tucker\",\"accountNumber\":\"1234\",\"accountType\":\"USER\"}";]";
 	
 	@Before
 	public void initialise() {
 		repo.setEntityManager(manager);
-		jsonUtil = new JSONUtil();
 		
-		account = new Account("Hayden", "Tucker", "1234");
+		account = new Account("username", "password", "Hayden", "Tucker", "1234", "USER");
 		accounts = new ArrayList<Account>();
 		accounts.add(account);
 		//repo.setJSONUtil(jsonUtil);
@@ -60,26 +57,26 @@ public class AccountDBRepositoryTest {
 	public void testUpdateAccount() {
 		account.setAccountNumber("1235");
 		Account expectedValue = null;
-		Account actualValue = repo.updateAccount(123L, account);
+		Account actualValue = repo.updateAccount("username", account);
 		Assert.assertEquals(expectedValue, actualValue);
 		
 		Mockito.when(manager.find(Mockito.eq(Account.class), Mockito.anyLong())).thenReturn(account);
 		
 		expectedValue = account;
-		actualValue = repo.updateAccount(123L, account);
+		actualValue = repo.updateAccount("username", account);
 		Assert.assertEquals(expectedValue, actualValue);
 	}
 
 	@Test
 	public void testDeleteAccount() {
 		Account expectedValue = null;
-		Account actualValue = repo.deleteAccount(123L);
+		Account actualValue = repo.deleteAccount("username");
 		Assert.assertEquals(expectedValue, actualValue);
 		
 		Mockito.when(manager.find(Mockito.eq(Account.class), Mockito.anyLong())).thenReturn(account);
 		
 		expectedValue = account;
-		actualValue = repo.deleteAccount(123L);
+		actualValue = repo.deleteAccount("username");
 		Assert.assertEquals(expectedValue, actualValue);
 	}
 	
@@ -97,12 +94,12 @@ public class AccountDBRepositoryTest {
 	@Test
 	public void testGetAccount() {
 		Account expectedValue = null;
-		Account actualValue = repo.getAccount(1L);
+		Account actualValue = repo.getAccount("username");
 		Assert.assertEquals(expectedValue, actualValue);
 		
 		Mockito.when(manager.find(Mockito.eq(Account.class), Mockito.anyLong())).thenReturn(account);
 		expectedValue = account;
-		actualValue = repo.getAccount(1L);
+		actualValue = repo.getAccount("username");
 		Assert.assertEquals(expectedValue, actualValue);
 	}
 }

@@ -22,19 +22,37 @@ public class AccountService implements IAccountService {
 	}
 
 	@Override
-	public String updateAccount(Long id, String jsonAccount) {
+	public String updateAccount(String username, String jsonAccount) {
 		Account updatedAccount = jsonUtil.getObjectForJSON(jsonAccount, Account.class);
-		Account account = repo.updateAccount(id, updatedAccount);
-		if (account != null) {
+		Account oldAccount = repo.getAccount(username);
+		if (oldAccount != null) {
+			updatedAccount.setPassword(oldAccount.getPassword());
+			repo.updateAccount(username, updatedAccount);
 			return "{\"message\": \"Account has been successfully updated!\"}";
+		} else {
+			return "{\"message\": \"Account does not exist!\"}";
+		}
+	}
+	
+	@Override
+	public String updateAccountPassword(String username, String oldPassword, String jsonAccount) {
+		Account account = repo.getAccount(username);
+		Account updatedAccount = jsonUtil.getObjectForJSON(jsonAccount, Account.class);
+		if (account != null) {
+			if (account.getPassword().equals(oldPassword)) {
+				repo.updateAccount(username, updatedAccount);
+				return "{\"message\": \"Password has been successfully updated!\"}";
+			} else {
+				return "{\"message\": \"Incorrect old password!\"}";
+			}
 		} else {
 			return "{\"message\": \"Account does not exist!\"}";
 		}
 	}
 
 	@Override
-	public String deleteAccount(Long id) {
-		Account account = repo.deleteAccount(id);
+	public String deleteAccount(String username) {
+		Account account = repo.deleteAccount(username);
 		if (account != null) {
 			return "{\"message\": \"Account has been successfully deleted!\"}";
 		} else {
@@ -48,8 +66,8 @@ public class AccountService implements IAccountService {
 	}
 
 	@Override
-	public String getAccount(Long id) {
-		Account account = repo.getAccount(id);
+	public String getAccount(String username) {
+		Account account = repo.getAccount(username);
 		
 		if (account != null) {
 			return jsonUtil.getJSONForObject(account);
@@ -58,8 +76,23 @@ public class AccountService implements IAccountService {
 		}
 	}
 	
+	@Override
+	public String login(String username, String password) {
+		Account account = repo.getAccount(username);
+		
+		if (account != null) {
+			if (account.getPassword().equals(password)) {
+				account.setPassword("");
+				return jsonUtil.getJSONForObject(account);
+			} else {
+				return "{\"message\": \"Incorrect password!\"}";
+			}
+		} else {
+			return "{\"message\": \"Account does not exist!\"}";
+		}
+	}
+	
 	public void setJSONUtil(JSONUtil jsonUtil) {
 		this.jsonUtil = jsonUtil;
 	}
-
 }
