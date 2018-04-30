@@ -87,7 +87,7 @@ $( window ).on('load', function() {
 					        async: false,
 					        success: function(data) {
 					            alert(data.message);
-					            if (Cookies.get('accountappUsername') === username) {
+					            if ((Cookies.get('accountappUsername') === username) && data.hasOwnProperty("success")) {
 					            	Cookies.remove("accountappUsername");
     								Cookies.remove("accountappType");
 					            }

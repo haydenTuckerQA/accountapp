@@ -1,5 +1,7 @@
 package com.qa.business.service;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import com.qa.business.repository.IAccountRepository;
@@ -52,9 +54,23 @@ public class AccountService implements IAccountService {
 
 	@Override
 	public String deleteAccount(String username) {
-		Account account = repo.deleteAccount(username);
+		Account account = repo.getAccount(username);
+		if (account != null && account.getType().equals("ADMIN")) {
+			List<Account> accounts = repo.getAllAccounts();
+			int adminCount = 0;
+			for (Account acc : accounts) {
+				if (acc.getType().equals("ADMIN")) {
+					adminCount++;
+				}
+			}
+			if (adminCount <= 1) {
+				return "{\"message\": \"You can't delete the last admin!\"}";
+			}
+		}
+		
+		account = repo.deleteAccount(username);
 		if (account != null) {
-			return "{\"message\": \"Account has been successfully deleted!\"}";
+			return "{\"message\": \"Account has been successfully deleted!\", \"success\": true}";
 		} else {
 			return "{\"message\": \"Account does not exist!\"}";
 		}
